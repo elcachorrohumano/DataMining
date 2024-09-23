@@ -109,7 +109,7 @@ Knowledge Discovery in Data (KDD): is the overall process of collecting data, in
 
 Ciclo:
 
-1. Business understanding: definir el problema, requerimientos, métricas a optimizar,
+1. Business understanding: definir el problema, requerimientos del cliente, métricas a optimizar.
 2. Data understanding
 3. Data preparation
 4. Data validation
@@ -138,6 +138,255 @@ EDA:
 
 ### CRISP-DM
 
-```
-<img src="images/crisp_steps.png" alt="Example Image" width="400">
-```
+Estandarización del proceso de KDD.
+
+![Example Image](images/crisp_steps.png)
+
+## Scoping
+
+Definir los proyectos. Bien definidos implica mejores chances de ser exitoso. Riesgos si no haces scoping:
+
+- Miscommunication
+- Unclear goals
+- Lacking of realism
+- Impossibility to get data
+- Failure
+
+Steps:
+
+1. Goals
+2. Actions
+3. data
+4. Analytics
+
+### Goals
+
+- Define goals as clear as possible.
+- Start with rough ideas, and iterate to refine them.
+- Set realistic goals.
+- Indicate limitations
+- Set trade-offs.
+
+### Actions
+
+- After defining goals, set a coourse of actions to chieve them
+- Identify those that require data
+- Decide which actions need to feed information to other parts of the project
+- Establish a flow of information across actions
+
+### Data
+
+- Identify available sources for the data.
+- Set quality validation metrics.
+
+### AnALYSIS
+
+- Agree on the type of analysis: description, detection, prediction, classification, regression
+- Decide on metrics for evaluation.
+
+### Ethics
+
+- Transparency
+- Equity
+- Accountability
+- Privacy/confidentiality
+
+## EDA
+
+Exploratory Data Analysis
+
+- Getting an overall picture of our data.
+- It focuses on looking. at the "position" (mean) and dispersion of each variable (distribution).
+- It also looks at the correlation between pairs of variables.
+- Data cleaning.
+
+Objective: overview and indentify useful and useless variables.
+
+### Centrality
+
+Location: typical value of a variable:
+
+- Mean: $ \bar{x} =
+- Median
+- Mode
+- Expected vaule: $E[x]=\sum p(x_n)x_n$
+- Weighted mean
+- Trimmed mean:  $  \frac{1}{n - 2k} \sum_{i=k+1}^{n-k} x_{(i)}$
+
+### Dispersion
+
+Variability of our data:
+
+- STDEV
+- Variance
+- Mead absolute deviation (MAD): $\text{MAD} = \frac{1}{n} \sum_{i=1}^{n} |x_i - \bar{x}|$
+- Entropy: $H(X) = - \sum_{i=1}^{n} p(x_i) \log(p(x_i))$
+- Range: $R = \max(x) - \min(x)$
+- Quantiles
+- Interquartile range
+
+### Distributions
+
+Parametric or non-parametric distributions.
+
+- Parametric: binomial, Gaussian, uniform, other.
+- Non-paremetric: kernel density estimation and visualization tools: hacer una gaussiana alrededor de cada punto y sumarlos verticalmente.
+- Boxplots, frequency tables, histograms, density plots, scatter plots, etc...
+- Biases or anomalies
+- Temporal patterns
+- Correlations
+
+### Other analyses
+
+Temporalidad, bias, ...
+
+### Binary, categorical, and ordinal variables
+
+- Frequency table for categorical or binned real-valued variables.
+- Histogramas: para intervalos de números reales.
+- Gráfica de barras: pensadas para valores enteros (tienen espacio entre las barras).
+- Mode and expected value.
+
+### Correlations
+
+- Correlation between pairs of independent variables.
+- Correlation between each independent variable and the targer variable.
+- Visualización:
+  - Correlation matric (with p-values)
+  - Scatter plots
+  - Hexagonal binning chart for numeric data
+- P-value
+
+## Feature Selection
+
+Si hay dos variables con alta correlación, quedarse con la que dé más información (o la que esté menos correlacionada con las otras variables).
+
+### Medir correlación
+
+- Numérica vs numérica: correlación
+- Numérica vs categórica: ANOVA
+- Categórica vs categórica: información mutua
+
+### ANOVA
+
+Supone que las categóricas involucradas tienen la misma medida en la numérica.
+
+Por ejemplo, tasa de "hit" (numérica) por cada posición (categórica).
+
+## Feature Engineering
+
+Lo que queremos:
+
+Approaches:
+
+- Quadratic (or other power transformations): $ x'=(x)^n$
+- Square root: $ x´=\sqrt x$
+- Logarithmic: $ x' = log(x)$
+- Box-Cox transformation:
+
+  $$
+  x(\lambda) = 
+  \begin{cases} 
+  \frac{x^\lambda - 1}{\lambda}, & \lambda \neq 0 \\
+  \ln(x), & \lambda = 0 
+  \end{cases}
+  $$
+- Product of initial variables: $x'=(xi)(xj)$
+- Product of transformed variables
+
+## Time Series
+
+Dependencia temporal entre eventos.
+
+Tasks: predicción (regresión) (autoregresión si predecimos una variable con la misma pero en el pasado).
+
+Regresión múltiple: cuando usamos otras variables para predecir una en el futuro.
+
+Auteregresión: hasta n muestras en el pasado para predecir el nuevo valor
+
+$$
+x(t) = w_o + w_1x(t-1)+w_2x(t-2)+...+w_Nx(t-N)
+$$
+
+Regresión múltiple
+
+$$
+x(t)=w_{1,1} + x_1(t-1)+w_{1,2}x_1(t-2)+...+w_{1.N}x_1(t-N)+\\+w_{2,1}x_2(t-1)+ w_{2,2}x_2(t-2)+...+w_{2,N}x_2(t-N)+...
+$$
+
+Podemos organizar la data con un registro: el independiente (a predecir) y sus variables son los n días anteriores.
+
+Podemos hacer TS con clasificación. Es decir, hacer un modelo para diferentes casos.
+
+### TS EDA
+
+line and scatter plots
+
+Train, Val and Test: Separar por temporalidad.
+
+Convertir a datetime y hacerlo el índice de la tabla.
+
+Estadísticas básicas
+
+Agregar datos faltantes (weekday)
+
+Clipping outliers to min or max of box and whiskers
+
+Hacer correlaciones con lags (te puede dar seasonaility).
+
+Parcial autocorrelation: correlación de la misma variable con k lags descontando la correlación de los lags intermetios.
+
+- Resolver problema de regresión $ x_t = w_0 + w_1x_{t-1}+w_2x_{t-2}+ ...+ w_Nx_{t-n}$
+- $ PACF(x_t, x_{t-3}) = w_3$
+- $ PACF(x_t, x_{t-N}) = w_n$
+- Partial autocorrelation function
+
+Decomposition:
+
+- Base level: base level: average value along the data
+- Trend: increment or decrement in the slope of the data
+- Seasonality: distinct pattern repeated at regular intervals
+- Error: unexplained white noise
+
+
+### Time Series Models
+
+Moving average:
+
+- Smooths the signal out by using a moving local average of its samples.
+- Applicatioins: trend prediction, denoising.
+- It relies on a sliding window approach for the computations of the moving average: convolution.
+- The window might containg weighs: Weighted moving average.
+- Elegir cantidad de datos para el average: k términos con más autocorrelación.
+
+Fourier-based models
+
+- Descomopne una señal en diferentes señales de oscilación perdódica, cuya suma da la señal original.
+- Aplication: Fourier Transform for filtering.
+- Tool: spectogram for representation: histogram of frequencies of the signals
+
+Exponential smoothing
+
+- Aproxima un moving average by wiethed combinations of historic average approximations and the curreng observations
+- $\hat{y_t} = \alpha y_{t-1}+ (1-\alpha)\hat{y_{t-1}} $
+- Predicción: el último valor conocido ponderado por el promedio móvil anterior.
+
+Holt-Winters model:
+
+- Es como exponential smooting añadiendo trend y seasonality: $\hat y=l_{t-1}+b_{t-1}+s_{t-m} $ (m es la longitud de la estacionalidad).
+- $l_t = \alpha (y_t-s_{t-m})+(1-\alpha
+
+ARIMA family
+
+- $y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \dots + \theta_q \varepsilon_{t-q}$
+- p: número de términos autoregresivos
+- d: número de "derivadas" necesarias para estacionalidad.
+- q: número de lagged forecast errors.
+
+Facebook Prophet
+
+- Como ARIMA pero procesa:
+- Trend, seasonality (Fourier analysis)
+- Seasonality pero con Holiday effects
+- Información de los dominios.
+- Ruido
